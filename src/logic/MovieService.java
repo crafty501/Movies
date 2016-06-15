@@ -1,6 +1,7 @@
 package logic;
 
 import java.io.InputStream;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,14 +44,27 @@ public class MovieService extends MovieServiceBase {
 		// Connect to local machine
 		try {
 			// TODO: connect to MongoDB
-			mongo = null;
-		} catch (Exception e) {
+			mongo = new MongoClient("localhost", 27017);
+		} catch (UnknownHostException e) {
 			System.out.println("No MongoDB server running on localhost");
 		}
-		// TODO: Select database "imdb"
-		db = null;
+		
+		
+		// TODO: Select database "imdb";
+		try {
+			
+			db = mongo.getDB("imdb");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		
+		
 		// Create a GriFS FileSystem Object using the db
 		fs = new GridFS(db);
+	
 		// See this method on how to use GridFS
 		createSampleImage();
 		// Print the name of all collections in that database
@@ -59,8 +73,8 @@ public class MovieService extends MovieServiceBase {
 		enableTextSearch();
 
 		// TODO: Take "movies" and "tweets" collection
-		movies = null;
-		tweets = null;
+		movies = db.getCollection("films");
+		tweets = db.getCollection("tweeds");
 
 		// If movie database isn't filled (has less than 10000 documents) delete
 		// everything and fill it
