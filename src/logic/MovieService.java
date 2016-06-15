@@ -6,7 +6,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
 
 import twitter4j.GeoLocation;
 import twitter4j.Status;
@@ -25,22 +27,29 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 
+
+
 /**
  * This class holds the data/backend logic for the Movie Web-App. It uses
  * MongoDB to perform different kinds of queries.
  */
 public class MovieService extends MovieServiceBase {
+	
+	 private final static Logger log = Logger.getLogger( MovieService.class.getName() );
+
 
 	private MongoClient mongo;
 	private DB db;
 	private DBCollection movies;
 	private DBCollection tweets;
 	private GridFS fs;
-
+	
 	/**
 	 * Create a new MovieService by connecting to MongoDB.
 	 */
+
 	public MovieService() {
+		
 		// Connect to local machine
 		try {
 			// connect to MongoDB
@@ -111,7 +120,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the matching DBObject
 	 */
 	public DBObject findMovieByTitle(String title) {
-	
+		log.info("findMovieByTitle");
 		return movies.findOne(new BasicDBObject("title",title));
 	}
 
@@ -122,6 +131,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getViewableMovies() {
+		log.info("getViewableMovies");
 		DBCursor results = movies.find(new BasicDBObject("tweets.coordinates", new BasicDBObject("$exists", true)));
 		return results;
 	}
@@ -140,7 +150,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getBestMovies(int minVotes, double minRating, int limit) {
-				
+		log.info("getBestMovies");
+
 		BasicDBObject obj = new BasicDBObject();
 		obj.append("rating", "$gt: "+minRating);
 		obj.append("votes", "$gt"+minVotes);
@@ -162,6 +173,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getByGenre(String genreList, int limit) {
+		log.info("getByGenre");
 		String[] genres = genreList.split(",");
 		
 		
@@ -186,7 +198,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor searchByPrefix(String titlePrefix, int limit) {
-		
+		log.info("searchByPrefix");
 		DBObject prefixQuery = new BasicDBObject("title", Pattern.compile("^" + titlePrefix + ".*"));
 	
 		
@@ -212,6 +224,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor suggest(String prefix, int limit) {
+		log.info("suggest");
 		DBObject query = new BasicDBObject("title", Pattern.compile("^" + prefix + ".*"));
 		DBObject projection = new BasicDBObject("title", true);
 		DBCursor suggestions = movies.find(query, projection).limit(limit);
@@ -225,6 +238,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getTweetedMovies() {
+		log.info("getTweetedMovies");
 		//TODO: implemented
 		DBCursor results = movies.find(new BasicDBObject("tweets", "$gt: []"));
 		return results;
@@ -240,6 +254,7 @@ public class MovieService extends MovieServiceBase {
 	 *            the comment to save
 	 */
 	public void saveMovieComment(String id, String comment) {
+		log.info("saveMovieComment");
 		//TODO: implement
 
 	}
@@ -253,6 +268,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getGeotaggedTweets(int limit) {
+		log.info("getGeotaggedTweetslimited");
 		//TODO : implementend
 		DBCursor result = tweets.find(new BasicDBObject("coordinates","$gt: []")).limit(limit);
 		return result;
@@ -270,6 +286,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getTaggedTweets() {
+		log.info("getTaggedTweets");
+
 		//TODO : implement
 		DBObject projection = null;
 		DBObject query = null;
@@ -295,6 +313,8 @@ public class MovieService extends MovieServiceBase {
 	 *            the tweet
 	 */
 	public void saveTweet(String movie, Status status) {
+		log.info("saveTweet");
+
 		// Extract information from tweet
 		String user = status.getUser().getName();
 		String text = status.getText();
@@ -360,6 +380,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getByTweetsKeywordRegex(String keyword, int limit) {
+		log.info("getByTweetsKeywordRegex");
 		//TODO : implemented
 		DBCursor result = tweets.find(new BasicDBObject("text", keyword)).limit(limit);
 		return result;
@@ -386,6 +407,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return a List of Objects returned by the FTS query
 	 */
 	public List<DBObject> searchTweets(String query) {
+		log.info("searchTweets");
 		// Create a text index on the "text" property of tweets
 		tweets.ensureIndex(new BasicDBObject("text", "text").append("user.name", "text"));
 
@@ -411,6 +433,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getNewestTweets(int limit) {
+		log.info("getNewestTweets");
 		//TODO : implement
 		DBCursor result = null;
 		return result;
@@ -444,6 +467,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return
 	 */
 	public DBCursor getTweetsNear(double lat, double lng, int radiusKm) {
+		log.info("getTweetsNear");
+
 		DBObject pointQuery = new BasicDBObject("coordinates", new BasicDBObject("$near",
 				new BasicDBObject("$geometry", new BasicDBObject("type", "Point").append("coordinates", new Double[] {
 						lng, lat })).append("$maxDistance", radiusKm * 1000)));
@@ -457,6 +482,8 @@ public class MovieService extends MovieServiceBase {
 	 * be set, so the file can be retrieved and displayed by web clients.
 	 */
 	public void createSampleImage() {
+		log.info("createSampleImage");
+
 		// Create file
 		GridFSInputFile file = fs.createFile(MovieService.class.getResourceAsStream("/data/sample.png"));
 		// Set file name and content type
@@ -474,6 +501,7 @@ public class MovieService extends MovieServiceBase {
 	 * @return The retrieved GridFS File
 	 */
 	public GridFSDBFile getFile(String name) {
+		log.info("getFile");
 		//TODO: implement
 		GridFSDBFile file = null;
 		return file;
@@ -489,6 +517,7 @@ public class MovieService extends MovieServiceBase {
 	 * @param contentType
 	 */
 	public void saveFile(String name, InputStream inputStream, String contentType) {
+		log.info("saveFile");
 		GridFSInputFile gFile = null;
 		//Remove old versions
 		fs.remove(name);
@@ -501,6 +530,7 @@ public class MovieService extends MovieServiceBase {
 	 * Fill the database using the data files in the data directory
 	 */
 	public void createMovieData() {
+		log.info("createMovieData");
 		clearDatabase();
 
 		// Load a CSV file of IMDB titles into the database
@@ -534,6 +564,7 @@ public class MovieService extends MovieServiceBase {
 	 * Delete all documents from both the tweets and the movie collection
 	 */
 	public void clearDatabase() {
+		log.info("clearDatabase");
 		movies.remove(new BasicDBObject());
 		tweets.remove(new BasicDBObject());
 	}
@@ -545,6 +576,7 @@ public class MovieService extends MovieServiceBase {
 	 * @param stati
 	 */
 	public void saveTweets(String movie, List<Status> stati) {
+		log.info("saveTweets");
 		for (Status status : stati) {
 			saveTweet(movie, status);
 		}
