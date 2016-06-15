@@ -81,8 +81,8 @@ public class MovieService extends MovieServiceBase {
 		enableTextSearch();
 
 		// Take "movies" and "tweets" collection
-		movies = db.getCollection("films");
-		tweets = db.getCollection("tweeds");
+		movies = db.getCollection("movies");
+		tweets = db.getCollection("tweets");
 		
 		// If movie database isn't filled (has less than 10000 documents) delete
 		// everything and fill it
@@ -175,10 +175,34 @@ public class MovieService extends MovieServiceBase {
 	public DBCursor getByGenre(String genreList, int limit) {
 		log.info("getByGenre");
 		String[] genres = genreList.split(",");
+		if (genreList.equals("")){
+			return null;
+		}
+		
+		String Q = "["; 
+		for(int i = 0; i < genres.length; i++){
+			String gen = genres[i];
+			if(i == genres.length - 1){
+				if(i == 0){
+					Q = Q +"\""+gen + "\"]";
+				}else{
+					Q = Q + ","+"\""+gen+"\"]";
+				}
+			}else{
+				if(i == 0){
+			    
+			     Q = Q +"\""+gen + "\"";
+				}else{
+					Q = Q + "," +"\""+gen + "\"";	
+				}
+			}
+		}
 		
 		
-		BasicDBObject obj = new BasicDBObject();
-		obj.append("genere", "["+genreList+"]");
+		
+		BasicDBObject obj = new BasicDBObject("genre","{$all:"+Q+"}");
+		System.out.println(Q);
+		
 		DBCursor cur = movies.find(obj);
 		
 		return cur;
