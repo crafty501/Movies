@@ -82,10 +82,10 @@ public class MovieService extends MovieServiceBase {
 
 		// TODO: Index Movie attributes "title", "rating", "votes", "tweets.coordinates"
 		movies.createIndex(new BasicDBObject("title", 1));
-		movies.createIndex(new BasicDBObject("rating", 2));
-		movies.createIndex(new BasicDBObject("votes", 3));
+		movies.createIndex(new BasicDBObject("rating", -1));
+		movies.createIndex(new BasicDBObject("votes", -1));
 
-		tweets.ensureIndex(new BasicDBObject("coordinates", "2dsphere"));
+		tweets.createIndex(new BasicDBObject("coordinates", "2dsphere"));
 	}
 
 	/**
@@ -107,9 +107,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return the matching DBObject
 	 */
 	public DBObject findMovieByTitle(String title) {
-		// TODO: implement
-		DBObject result = null;
-		return result;
+	
+		return movies.findOne(new BasicDBObject("title",title));
 	}
 
 	/**
