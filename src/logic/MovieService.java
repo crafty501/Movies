@@ -136,8 +136,14 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getBestMovies(int minVotes, double minRating, int limit) {
-		// TODO: implement
-		DBCursor best = null;
+				
+		BasicDBObject obj = new BasicDBObject();
+		obj.append("rating", "$gt: "+minRating);
+		obj.append("votes", "$gt"+minVotes);
+		
+		DBCursor best = movies.find(obj);
+		
+		
 		return best;
 	}
 
@@ -154,6 +160,17 @@ public class MovieService extends MovieServiceBase {
 	public DBCursor getByGenre(String genreList, int limit) {
 		String[] genres = genreList.split(",");
 		//TODO: implement
+		
+		
+		BasicDBObject obj = new BasicDBObject();
+		
+		//obj.append("genere", "["+minRating);
+		//obj.append("votes", "$gt"+minVotes);
+		
+		
+		
+		
+		
 		DBCursor result = null;
 		return result;
 	}
