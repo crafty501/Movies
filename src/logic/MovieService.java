@@ -160,20 +160,14 @@ public class MovieService extends MovieServiceBase {
 	 */
 	public DBCursor getByGenre(String genreList, int limit) {
 		String[] genres = genreList.split(",");
-		//TODO: implement
 		
 		
 		BasicDBObject obj = new BasicDBObject();
+		obj.append("genere", "["+genreList+"]");
+		DBCursor cur = movies.find(obj);
 		
-		//obj.append("genere", "["+minRating);
-		//obj.append("votes", "$gt"+minVotes);
+		return cur;
 		
-		
-		
-		
-		
-		DBCursor result = null;
-		return result;
 	}
 
 	/**
