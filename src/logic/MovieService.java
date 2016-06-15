@@ -43,19 +43,17 @@ public class MovieService extends MovieServiceBase {
 	public MovieService() {
 		// Connect to local machine
 		try {
-			// TODO: connect to MongoDB
+			// connect to MongoDB
 			mongo = new MongoClient("localhost", 27017);
 		} catch (UnknownHostException e) {
 			System.out.println("No MongoDB server running on localhost");
 		}
 		
 		
-		// TODO: Select database "imdb";
+		// Select database "imdb";
 		try {
-			
 			db = mongo.getDB("imdb");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -72,10 +70,10 @@ public class MovieService extends MovieServiceBase {
 		// Enable Full Text Search
 		enableTextSearch();
 
-		// TODO: Take "movies" and "tweets" collection
+		// Take "movies" and "tweets" collection
 		movies = db.getCollection("films");
 		tweets = db.getCollection("tweeds");
-
+		
 		// If movie database isn't filled (has less than 10000 documents) delete
 		// everything and fill it
 		if (movies.count() < 10000) {
@@ -83,6 +81,9 @@ public class MovieService extends MovieServiceBase {
 		}
 
 		// TODO: Index Movie attributes "title", "rating", "votes", "tweets.coordinates"
+		movies.createIndex(new BasicDBObject("title", 1));
+		movies.createIndex(new BasicDBObject("rating", 2));
+		movies.createIndex(new BasicDBObject("votes", 3));
 
 		tweets.ensureIndex(new BasicDBObject("coordinates", "2dsphere"));
 	}

@@ -1,4 +1,4 @@
 
 Initial Import from the data
-./mongoimport --db imdb --collection movies --file "mongodb/movies.json
-./mongoimport --db imdb --collection tweets --file "mongodb/tweets.json
+./mongoimport --db imdb --collection movies --file "../movies.json"
+./mongoimport --db imdb --collection tweets --file "../tweets.json"
