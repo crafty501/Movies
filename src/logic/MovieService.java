@@ -45,6 +45,7 @@ public class MovieService extends MovieServiceBase {
 		try {
 			// connect to MongoDB
 			mongo = new MongoClient("localhost", 27017);
+			//mongo = new MongoClient("192.168.111.138", 27017);
 		} catch (UnknownHostException e) {
 			System.out.println("No MongoDB server running on localhost");
 		}
@@ -253,8 +254,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getGeotaggedTweets(int limit) {
-		//TODO : implement
-		DBCursor result = null;
+		//TODO : implementend
+		DBCursor result = tweets.find(new BasicDBObject("coordinates","$gt: []")).limit(limit);
 		return result;
 	}
 
