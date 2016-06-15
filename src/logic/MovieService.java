@@ -85,8 +85,11 @@ public class MovieService extends MovieServiceBase {
 		movies.createIndex(new BasicDBObject("title", 1));
 		movies.createIndex(new BasicDBObject("rating", -1));
 		movies.createIndex(new BasicDBObject("votes", -1));
+		movies.createIndex(new BasicDBObject("tweets", 1));
+
 
 		tweets.createIndex(new BasicDBObject("coordinates", "2dsphere"));
+		tweets.createIndex(new BasicDBObject("text", 1));
 	}
 
 	/**
@@ -220,8 +223,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getTweetedMovies() {
-		//TODO: implement
-		DBCursor results = null;
+		//TODO: implemented
+		DBCursor results = movies.find(new BasicDBObject("tweets", "$gt: []"));
 		return results;
 	}
 
@@ -355,8 +358,8 @@ public class MovieService extends MovieServiceBase {
 	 * @return the DBCursor for the query
 	 */
 	public DBCursor getByTweetsKeywordRegex(String keyword, int limit) {
-		//TODO : implement
-		DBCursor result = null;
+		//TODO : implemented
+		DBCursor result = tweets.find(new BasicDBObject("text", keyword)).limit(limit);
 		return result;
 	}
 
