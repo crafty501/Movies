@@ -187,7 +187,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	public DBCursor searchByPrefix(String titlePrefix, int limit) {
 		
-		DBObject prefixQuery = new BasicDBObject("title", "^" + titlePrefix+".*");
+		DBObject prefixQuery = new BasicDBObject("title", Pattern.compile("^" + titlePrefix + ".*"));
 	
 		
 		return movies.find(prefixQuery).limit(limit);
