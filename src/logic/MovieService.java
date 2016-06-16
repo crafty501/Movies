@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
+import org.bson.types.ObjectId;
 
 import twitter4j.GeoLocation;
 import twitter4j.Status;
@@ -178,10 +179,14 @@ public class MovieService extends MovieServiceBase {
 	 */
 	public DBCursor getByGenre(String genreList, int limit) {
 		log.info("getByGenre");
+		//TODO Kolja, fertig
 		String[] genres = genreList.split(",");
+		
 		BasicDBObject elemMatch = new BasicDBObject();
 		elemMatch.put("genre", genres);
+		
 		//System.out.println(elemMatch.toString());
+		
 		
 		DBCursor cur = movies.find(elemMatch);
 		
@@ -259,8 +264,26 @@ public class MovieService extends MovieServiceBase {
 	 */
 	public void saveMovieComment(String id, String comment) {
 		log.info("saveMovieComment");
-		//TODO: implement
-
+		//TODO: Kolja  - no valid ObjectId but why?
+		
+		//ObjectId oid = new ObjectId();
+		//System.out.println("is valid :" + oid.isValid(id));
+		//System.out.println(id+"\n"+comment);
+	
+		
+		
+		BasicDBObject query = new BasicDBObject("_id",id);
+		
+		System.out.println("Query: "+query.toString());
+		DBCursor cur = movies.find(new BasicDBObject("_id",id));
+		BasicDBObject  object = (BasicDBObject) cur.next();
+		
+		object.put("comment", comment);
+	
+		movies.update(query, object,false, false);
+		
+		
+		
 	}
 
 	/**
