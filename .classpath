@@ -33,5 +33,11 @@
 	<classpathentry kind="lib" path="lib/twitter4j-media-support-4.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/twitter4j-stream-3.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/twitter4j-stream-4.0.1.jar"/>
+	<classpathentry kind="lib" path="lib2/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib2/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="lib2/slf4j-log4j12-1.7.13.jar"/>
+	<classpathentry kind="lib" path="lib2/jcabi-log-0.17.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
