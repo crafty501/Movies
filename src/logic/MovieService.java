@@ -23,6 +23,7 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
+import com.sun.media.sound.FFT;
 
 import twitter4j.GeoLocation;
 import twitter4j.Status;
@@ -541,10 +542,13 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public void saveFile(String name, InputStream inputStream, String contentType) {
-		GridFSInputFile gFile = null;
+		GridFSInputFile gFile = fs.createFile(inputStream);
 		//Remove old versions
 		fs.remove(name);
-		//TODO: implement
+		//TODO
+		gFile.setFilename(name);
+		gFile.setContentType(contentType);
+		gFile.save();
 	}
 
 	// Given Helper Functions:
