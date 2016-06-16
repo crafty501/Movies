@@ -3,12 +3,16 @@ package logic;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
 
 import twitter4j.GeoLocation;
 import twitter4j.Status;
@@ -175,35 +179,11 @@ public class MovieService extends MovieServiceBase {
 	public DBCursor getByGenre(String genreList, int limit) {
 		log.info("getByGenre");
 		String[] genres = genreList.split(",");
-		if (genreList.equals("")){
-			return null;
-		}
+		BasicDBObject elemMatch = new BasicDBObject();
+		elemMatch.put("genre", genres);
+		//System.out.println(elemMatch.toString());
 		
-		String Q = "["; 
-		for(int i = 0; i < genres.length; i++){
-			String gen = genres[i];
-			if(i == genres.length - 1){
-				if(i == 0){
-					Q = Q +"\""+gen + "\"]";
-				}else{
-					Q = Q + ","+"\""+gen+"\"]";
-				}
-			}else{
-				if(i == 0){
-			    
-			     Q = Q +"\""+gen + "\"";
-				}else{
-					Q = Q + "," +"\""+gen + "\"";	
-				}
-			}
-		}
-		
-		
-		
-		BasicDBObject obj = new BasicDBObject("genre","{$all:"+Q+"}");
-		System.out.println(Q);
-		
-		DBCursor cur = movies.find(obj);
+		DBCursor cur = movies.find(elemMatch);
 		
 		return cur;
 		
