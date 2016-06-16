@@ -121,6 +121,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBObject findMovieByTitle(String title) {
+		//TODO
 		return movies.findOne(new BasicDBObject("title",title));
 	}
 
@@ -151,6 +152,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getBestMovies(int minVotes, double minRating, int limit) {
+		//TODO
 		BasicDBObject obj = new BasicDBObject("rating",new BasicDBObject("$gt", minRating));
 		obj.append("votes", new BasicDBObject("$gt",minVotes));
 		
@@ -200,6 +202,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor searchByPrefix(String titlePrefix, int limit) {
+		//TODO
 		DBObject prefixQuery = new BasicDBObject("title", Pattern.compile("^" + titlePrefix + ".*"));
 	
 		
@@ -240,8 +243,8 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getTweetedMovies() {
-		//TODO: implemented
-		DBCursor results = movies.find(new BasicDBObject("tweets", "$gt: []"));
+		//TODO
+		DBCursor results = movies.find(new BasicDBObject("tweets", new BasicDBObject("$exists", "true")));
 		return results;
 	}
 
@@ -288,8 +291,8 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getGeotaggedTweets(int limit) {
-		//TODO : implementend
-		DBCursor result = tweets.find(new BasicDBObject("coordinates","$gt: []")).limit(limit);
+		//TODO
+		DBCursor result = tweets.find(new BasicDBObject("coordinates",new BasicDBObject("$exists","true"))).limit(limit);
 		return result;
 	}
 
@@ -306,7 +309,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getTaggedTweets() {
-
+		//TODO
 		DBObject query = new BasicDBObject("coordinates",new BasicDBObject("$exists", "true"));
 		DBObject projection = new BasicDBObject("text", 1).append("movie", 1).append("user.name", 1).append("coordinates", 1);
 		DBObject sort = new BasicDBObject("_id", -1);
@@ -399,8 +402,8 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getByTweetsKeywordRegex(String keyword, int limit) {
-		//TODO : implemented
-		DBCursor result = tweets.find(new BasicDBObject("text", keyword)).limit(limit);
+		//TODO
+		DBCursor result = tweets.find(new BasicDBObject("text", java.util.regex.Pattern.compile(keyword))).limit(limit);
 		return result;
 	}
 
@@ -452,8 +455,8 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getNewestTweets(int limit) {
-		//TODO : implement
-		DBCursor result = null;
+		//TODO
+		DBCursor result = tweets.find(new BasicDBObject()).limit(limit);
 		return result;
 	}
 
@@ -518,7 +521,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public GridFSDBFile getFile(String name) {
-		
+		//TODO
 		GridFSDBFile file = fs.findOne(name);
 		if (file == null) {
 			System.out.println("sample");
