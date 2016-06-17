@@ -54,8 +54,8 @@ public class MovieService extends MovieServiceBase {
 		// Connect to local machine
 		try {
 			// connect to MongoDB
-//			mongo = new MongoClient("localhost", 27017);
-			mongo = new MongoClient("192.168.111.138", 27017);
+			mongo = new MongoClient("localhost", 27017);
+			//mongo = new MongoClient("192.168.111.138", 27017);
 		} catch (UnknownHostException e) {
 			System.out.println("No MongoDB server running on localhost");
 		}
@@ -177,8 +177,7 @@ public class MovieService extends MovieServiceBase {
 		//TODO Kolja, fertig
 		String[] genres = genreList.split(",");
 		
-		BasicDBObject elemMatch = new BasicDBObject();
-		elemMatch.put("genre", genres);
+		BasicDBObject elemMatch = new BasicDBObject("genre",new BasicDBObject("$all",genres));
 		
 		//System.out.println(elemMatch.toString());
 		
@@ -244,7 +243,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public DBCursor getTweetedMovies() {
-		//TODO
+		//TODO Fertig 
 		DBCursor results = movies.find(new BasicDBObject("tweets", new BasicDBObject("$exists", "true")));
 		return results;
 	}
@@ -265,8 +264,6 @@ public class MovieService extends MovieServiceBase {
 		//ObjectId oid = new ObjectId();
 		//System.out.println("is valid :" + oid.isValid(id));
 		//System.out.println(id+"\n"+comment);
-	
-		
 		
 		BasicDBObject query = new BasicDBObject("_id",id);
 		
@@ -404,7 +401,9 @@ public class MovieService extends MovieServiceBase {
 	@Loggable(trim = false)
 	public DBCursor getByTweetsKeywordRegex(String keyword, int limit) {
 		//TODO
-		DBCursor result = tweets.find(new BasicDBObject("text", java.util.regex.Pattern.compile(keyword))).limit(limit);
+		
+		 DBCursor result = movies.find(new BasicDBObject("tweets.text",Pattern.compile(keyword))).limit(limit); 	
+		
 		return result;
 	}
 
