@@ -157,7 +157,7 @@ public class MovieService extends MovieServiceBase {
 		BasicDBObject obj = new BasicDBObject("rating",new BasicDBObject("$gt", minRating));
 		obj.append("votes", new BasicDBObject("$gt",minVotes));
 		
-		DBCursor best = movies.find(obj);
+		DBCursor best = movies.find(obj).limit(limit);
 		
 		return best;
 	}
@@ -178,9 +178,6 @@ public class MovieService extends MovieServiceBase {
 		String[] genres = genreList.split(",");
 		
 		BasicDBObject elemMatch = new BasicDBObject("genre",new BasicDBObject("$all",genres));
-		
-		//System.out.println(elemMatch.toString());
-		
 		
 		DBCursor cur = movies.find(elemMatch);
 		
@@ -259,7 +256,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public void saveMovieComment(String id, String comment) {
-		//TODO: Kolja  - no valid ObjectId but why?
+		//TODO: Kolja
 		
 		//ObjectId oid = new ObjectId();
 		//System.out.println("is valid :" + oid.isValid(id));
