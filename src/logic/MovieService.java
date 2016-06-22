@@ -179,7 +179,7 @@ public class MovieService extends MovieServiceBase {
 		
 		BasicDBObject elemMatch = new BasicDBObject("genre",new BasicDBObject("$all",genres));
 		
-		DBCursor cur = movies.find(elemMatch);
+		DBCursor cur = movies.find(elemMatch).limit(limit);
 		
 		return cur;
 		
@@ -256,12 +256,7 @@ public class MovieService extends MovieServiceBase {
 	 */
 	@Loggable(trim = false)
 	public void saveMovieComment(String id, String comment) {
-		//TODO: Kolja
-		
-		//ObjectId oid = new ObjectId();
-		//System.out.println("is valid :" + oid.isValid(id));
-		//System.out.println(id+"\n"+comment);
-		
+		//TODO
 		BasicDBObject query = new BasicDBObject("_id",id);
 		
 		System.out.println("Query: "+query.toString());
